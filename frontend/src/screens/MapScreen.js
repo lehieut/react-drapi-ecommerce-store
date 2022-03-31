@@ -1,24 +1,24 @@
-import axios from 'axios';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import axios from "axios";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   LoadScript,
   GoogleMap,
   StandaloneSearchBox,
   Marker,
-} from '@react-google-maps/api';
-import { useNavigate } from 'react-router-dom';
-import { Store } from '../Store';
-import Button from 'react-bootstrap/Button';
-import { toast } from 'react-toastify';
+} from "@react-google-maps/api";
+import { useNavigate } from "react-router-dom";
+import { Store } from "../Store";
+import Button from "react-bootstrap/Button";
+import { toast } from "react-toastify";
 
 const defaultLocation = { lat: 45.516, lng: -73.56 };
-const libs = ['places'];
+const libs = ["places"];
 
 export default function MapScreen() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { userInfo } = state;
   const navigate = useNavigate();
-  const [googleApiKey, setGoogleApiKey] = useState('');
+  const [googleApiKey, setGoogleApiKey] = useState("");
   const [center, setCenter] = useState(defaultLocation);
   const [location, setLocation] = useState(center);
 
@@ -28,7 +28,7 @@ export default function MapScreen() {
 
   const getUserCurrentLocation = () => {
     if (!navigator.geolocation) {
-      alert('Geolocation os not supported by this browser');
+      alert("Geolocation os not supported by this browser");
     } else {
       navigator.geolocation.getCurrentPosition((position) => {
         setCenter({
@@ -44,7 +44,7 @@ export default function MapScreen() {
   };
   useEffect(() => {
     const fetch = async () => {
-      const { data } = await axios('/api/keys/google', {
+      const { data } = await axios("/api/keys/google", {
         headers: { Authorization: `BEARER ${userInfo.token}` },
       });
       setGoogleApiKey(data.key);
@@ -53,7 +53,7 @@ export default function MapScreen() {
 
     fetch();
     ctxDispatch({
-      type: 'SET_FULLBOX_ON',
+      type: "SET_FULLBOX_ON",
     });
   }, [ctxDispatch]);
 
@@ -83,7 +83,7 @@ export default function MapScreen() {
   const onConfirm = () => {
     const places = placeRef.current.getPlaces() || [{}];
     ctxDispatch({
-      type: 'SAVE_SHIPPING_ADDRESS_MAP_LOCATION',
+      type: "SAVE_SHIPPING_ADDRESS_MAP_LOCATION",
       payload: {
         lat: location.lat,
         lng: location.lng,
@@ -93,15 +93,15 @@ export default function MapScreen() {
         googleAddressId: places[0].id,
       },
     });
-    toast.success('location selected successfully.');
-    navigate('/shipping');
+    toast.success("location selected successfully.");
+    navigate("/billing");
   };
   return (
     <div className="full-box">
       <LoadScript libraries={libs} googleMapsApiKey={googleApiKey}>
         <GoogleMap
           id="smaple-map"
-          mapContainerStyle={{ height: '100%', width: '100%' }}
+          mapContainerStyle={{ height: "100%", width: "100%" }}
           center={center}
           zoom={15}
           onLoad={onLoad}

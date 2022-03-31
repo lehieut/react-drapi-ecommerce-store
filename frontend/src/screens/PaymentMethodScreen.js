@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
-import { useNavigate } from 'react-router-dom';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import CheckoutSteps from '../components/CheckoutSteps';
-import { Store } from '../Store';
+import React, { useContext, useEffect, useState } from "react";
+import { Helmet } from "react-helmet-async";
+import { useNavigate } from "react-router-dom";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import CheckoutSteps from "../components/CheckoutSteps";
+import { Store } from "../Store";
 
 export default function PaymentMethodScreen() {
   const navigate = useNavigate();
@@ -14,19 +14,19 @@ export default function PaymentMethodScreen() {
   } = state;
 
   const [paymentMethodName, setPaymentMethod] = useState(
-    paymentMethod || 'PayPal'
+    paymentMethod || "PayPal"
   );
 
   useEffect(() => {
     if (!shippingAddress.address) {
-      navigate('/shipping');
+      navigate("/billing");
     }
   }, [shippingAddress, navigate]);
   const submitHandler = (e) => {
     e.preventDefault();
-    ctxDispatch({ type: 'SAVE_PAYMENT_METHOD', payload: paymentMethodName });
-    localStorage.setItem('paymentMethod', paymentMethodName);
-    navigate('/placeorder');
+    ctxDispatch({ type: "SAVE_PAYMENT_METHOD", payload: paymentMethodName });
+    localStorage.setItem("paymentMethod", paymentMethodName);
+    navigate("/placeorder");
   };
   return (
     <div>
@@ -43,7 +43,7 @@ export default function PaymentMethodScreen() {
               id="PayPal"
               label="PayPal"
               value="PayPal"
-              checked={paymentMethodName === 'PayPal'}
+              checked={paymentMethodName === "PayPal"}
               onChange={(e) => setPaymentMethod(e.target.value)}
             />
           </div>
@@ -53,7 +53,7 @@ export default function PaymentMethodScreen() {
               id="Stripe"
               label="Stripe"
               value="Stripe"
-              checked={paymentMethodName === 'Stripe'}
+              checked={paymentMethodName === "Stripe"}
               onChange={(e) => setPaymentMethod(e.target.value)}
             />
           </div>

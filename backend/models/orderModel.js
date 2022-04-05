@@ -18,7 +18,7 @@ const orderSchema = new mongoose.Schema(
     ],
     billingAddress: {
       billingFullName: { type: String, required: true },
-      billingAddress: { type: String, required: true },
+      billingAddress1: { type: String, required: true },
       billingCity: { type: String, required: true },
       billingState: { type: String, required: true },
       billingPostalCode: { type: String, required: true },
@@ -28,7 +28,7 @@ const orderSchema = new mongoose.Schema(
       fullName: { type: String, required: true },
       address: { type: String, required: true },
       city: { type: String, required: true },
-      state: { type: String, required: true },
+      shippingState: { type: String, required: true },
       postalCode: { type: String, required: true },
       country: { type: String, required: true },
       location: {

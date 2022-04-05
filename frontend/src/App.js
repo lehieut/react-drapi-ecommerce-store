@@ -43,6 +43,7 @@ function App() {
     ctxDispatch({ type: "USER_SIGNOUT" });
     localStorage.removeItem("userInfo");
     localStorage.removeItem("shippingAddress");
+    localStorage.removeItem("billingAddress");
     localStorage.removeItem("paymentMethod");
     window.location.href = "/signin";
   };
@@ -190,6 +191,10 @@ function App() {
                 }
               />
               <Route path="/placeorder" element={<PlaceOrderScreen />} />
+              <Route
+                path="/placeorder/:id"
+                element={<PlaceOrderScreen />}
+              ></Route>
               <Route
                 path="/order/:id"
                 element={

@@ -123,7 +123,7 @@ export const getDRProductList = () => {
   // res.send(result);
 };
 
-export const createDRProduct = (id, options) => {
+export const createDRProduct = async (id, options) => {
   // accepts id and additional optional parameters and creates a sku via DR API
   // https://www.digitalriver.com/docs/digital-river-api-reference/#operation/createSkus
   const postOptions = {
@@ -142,7 +142,7 @@ export const createDRProduct = (id, options) => {
       countryOfOrigin: options.countryOfOrigin,
     },
   };
-  Axios(postOptions)
+  const product = await Axios(postOptions)
     // .then((response) => res.json(response.data))
     .catch((err) => {
       const message =
@@ -157,9 +157,10 @@ export const createDRProduct = (id, options) => {
       }
       throw err;
     });
+  return product;
 };
 
-export const editDRProduct = (id, options) => {
+export const editDRProduct = async (id, options) => {
   // accepts id and additional optional parameters and edits an existing sku via DR API
   // https://www.digitalriver.com/docs/digital-river-api-reference/#operation/updateSkus
   const postOptions = {
@@ -177,7 +178,7 @@ export const editDRProduct = (id, options) => {
       countryOfOrigin: options.countryOfOrigin,
     },
   };
-  Axios(postOptions)
+  const product = await Axios(postOptions)
     // .then((response) => res.json(response.data))
     .catch((err) => {
       const message =
@@ -192,6 +193,7 @@ export const editDRProduct = (id, options) => {
       }
       throw err;
     });
+  return product;
 };
 
 export const deleteDRProduct = (id) => {

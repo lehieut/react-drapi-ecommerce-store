@@ -1,5 +1,10 @@
 import express from "express";
 import expressAsyncHandler from "express-async-handler";
+import {
+  createDRProduct,
+  deleteDRProduct,
+  editDRProduct,
+} from "../drintegration.js";
 import Product from "../models/productModel.js";
 import { isAuth, isAdmin } from "../utils.js";
 
@@ -15,19 +20,36 @@ productRouter.post(
   isAuth,
   isAdmin,
   expressAsyncHandler(async (req, res) => {
+    const ts = Date.now();
     const newProduct = new Product({
-      name: "sample name " + Date.now(),
-      slug: "sample-name-" + Date.now(),
+      name: "sample name " + ts,
+      slug: "sample-name-" + ts,
       image: "/images/p1.jpg",
       price: 0,
-      category: "sample category",
+      category: "uncategorized",
       brand: "sample brand",
       countInStock: 0,
       rating: 0,
       numReviews: 0,
       description: "sample description",
+      eccn: "EAR99",
+      taxCode: "4512.100",
+      countryOfOrigin: "US",
     });
     const product = await newProduct.save();
+
+    //Integrating with DR API
+    const newId = product._id;
+    const drData = {
+      id: newId,
+      name: product.name,
+      description: "sample description",
+      eccn: "EAR99",
+      taxCode: "4512.100",
+      countryOfOrigin: "US",
+    };
+    createDRProduct(newId, drData);
+
     res.send({ message: "Product Created", product });
   })
 );
@@ -50,6 +72,17 @@ productRouter.put(
       product.countInStock = req.body.countInStock;
       product.description = req.body.description;
       await product.save();
+
+      const updatedDRProduct = {
+        name: req.body.name,
+        description: req.body.description,
+        eccn: req.body.eccn,
+        hsCode: req.body.hsCode,
+        taxCode: req.body.taxCode,
+        countryOfOrigin: req.body.countryOfOrigin,
+      };
+      await editDRProduct(productId, updatedDRProduct);
+
       res.send({ message: "Product Updated" });
     } else {
       res.status(404).send({ message: "Product Not Found" });
@@ -65,6 +98,7 @@ productRouter.delete(
     const product = await Product.findById(req.params.id);
     if (product) {
       await product.remove();
+      deleteDRProduct(req.params.id);
       res.send({ message: "Product Deleted" });
     } else {
       res.status(404).send({ message: "Product Not Found" });

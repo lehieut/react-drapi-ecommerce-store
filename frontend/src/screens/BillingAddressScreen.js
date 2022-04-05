@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
 import { Store } from "../Store";
 import CheckoutSteps from "../components/CheckoutSteps";
+import Axios from "axios";
 
 export default function BillingAddressScreen() {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ export default function BillingAddressScreen() {
   const {
     fullBox,
     userInfo,
-    cart: { shippingAddress, billingAddress },
+    cart: { shippingAddress, billingAddress, cartItems },
   } = state;
   const [billingFullName, setBillingFullName] = useState(
     billingAddress.billingFullName || ""
@@ -38,16 +39,69 @@ export default function BillingAddressScreen() {
   const [postalCode, setPostalCode] = useState(
     shippingAddress.postalCode || ""
   );
+  const [country, setCountry] = useState(shippingAddress.country || "");
+  const [billingCountry, setBillingCountry] = useState(
+    billingAddress.billingCountry || ""
+  );
   useEffect(() => {
     if (!userInfo) {
       navigate("/signin?redirect=/billing");
     }
   }, [userInfo, navigate]);
-  const [country, setCountry] = useState(shippingAddress.country || "");
-  const [billingCountry, setBillingCountry] = useState(
-    billingAddress.billingCountry || ""
-  );
-  const submitHandler = (e) => {
+  useEffect(() => {
+    if (!localStorage.getItem("checkoutSession")) {
+      const products = cartItems.map((item) => {
+        console.log(item);
+        return {
+          skuId: item._id,
+          price: item.price,
+        };
+      });
+      console.log(products);
+      const checkoutOptions = {
+        customerId: userInfo._id,
+        email: userInfo.email,
+        items: products,
+        currency: "USD",
+      };
+      console.log(checkoutOptions);
+      // ctxDispatch(createDRCheckout(checkoutOptions));
+      //createDRCheckout
+
+      async function createDRCheckout() {
+        try {
+          const drCheckoutSession = await Axios.post(
+            "/api/drcheckout",
+            checkoutOptions,
+            {
+              headers: { Authorization: `Bearer ${userInfo.token}` },
+            }
+          );
+          // dispatch({
+          //   type: DR_CHECKOUT_CREATE_SUCCESS,
+          //   payload: drCheckoutSession,
+          // });
+          localStorage.setItem(
+            "checkoutSession",
+            JSON.stringify(drCheckoutSession.data.checkoutSession)
+          );
+          console.log(
+            "if - " + JSON.stringify(drCheckoutSession.data.checkoutSession)
+          );
+        } catch (error) {
+          const message =
+            error.response && error.response.data.message
+              ? error.response.data.message
+              : error.message;
+          // dispatch({ type: DR_CHECKOUT_CREATE_FAIL, payload: message });
+        }
+      }
+      createDRCheckout();
+    } else {
+      console.log("else - " + localStorage.getItem("checkoutSession"));
+    }
+  }, [cartItems, userInfo]);
+  const submitHandler = async (e) => {
     e.preventDefault();
     ctxDispatch({
       type: "SAVE_SHIPPING_ADDRESS",
@@ -95,6 +149,58 @@ export default function BillingAddressScreen() {
         billingCountry,
       })
     );
+    const checkoutObject = {
+      shipTo: {
+        address: {
+          line1: address,
+          // line2: address2,
+          city: city,
+          postalCode: postalCode,
+          state: shippingState,
+          country: country,
+        },
+        name: fullName,
+      },
+      billTo: {
+        address: {
+          line1: billingAddress1,
+          // line2: address2,
+          city: billingCity,
+          postalCode: billingPostalCode,
+          state: billingState,
+          country: billingCountry,
+        },
+        name: billingFullName,
+      },
+    };
+    if (localStorage.getItem("checkoutSession")) {
+      // editDRCheckout function
+      try {
+        const drCheckoutSession = await Axios.post(
+          `/api/drcheckout/${
+            JSON.parse(localStorage.getItem("checkoutSession")).id
+          }`,
+          checkoutObject,
+          {
+            headers: { Authorization: `Bearer ${userInfo.token}` },
+          }
+        );
+        // dispatch({
+        //   type: DR_CHECKOUT_EDIT_SUCCESS,
+        //   payload: drCheckoutSession,
+        // });
+        localStorage.setItem(
+          "checkoutSession",
+          JSON.stringify(drCheckoutSession.data.checkout)
+        );
+      } catch (error) {
+        const message =
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message;
+        // dispatch({ type: DR_CHECKOUT_EDIT_FAIL, payload: message });
+      }
+    }
     navigate("/payment");
   };
 

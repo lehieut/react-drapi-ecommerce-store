@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer } from "react";
 import axios from "axios";
 import logger from "use-reducer-logger";
 import Row from "react-bootstrap/Row";
@@ -48,7 +48,7 @@ function HomeScreen() {
   return (
     <div>
       <Helmet>
-        <title>Amazona</title>
+        <title>Digital River MERN Store</title>
       </Helmet>
       <Carousel showArrows autoPlay infiniteLoop showThumbs={false}>
         <div key="1">

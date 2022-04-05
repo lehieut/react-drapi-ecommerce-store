@@ -1,7 +1,7 @@
 import Axios from "axios";
 import React, { useContext, useEffect, useReducer } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
@@ -35,6 +35,50 @@ export default function PlaceOrderScreen() {
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { cart, userInfo } = state;
+  const params = useParams();
+
+  // console.log(cart.checkoutSession);
+
+  const { id: sourceId } = params;
+  useEffect(() => {
+    if (sourceId && cart.checkoutSession) {
+      const checkoutObject = {
+        sourceId: sourceId,
+      };
+      // dispatch(editDRCheckout(cart.checkoutSession.id, checkoutObject));
+
+      // editDRCheckout function
+      async function editDRCheckout() {
+        try {
+          const drCheckoutSession = await Axios.post(
+            `/api/drcheckout/${cart.checkoutSession.id}`,
+            checkoutObject,
+            {
+              headers: { Authorization: `Bearer ${userInfo.token}` },
+            }
+          );
+          // dispatch({
+          //   type: DR_CHECKOUT_EDIT_SUCCESS,
+          //   payload: drCheckoutSession,
+          // });
+          localStorage.setItem(
+            "checkoutSession",
+            JSON.stringify(drCheckoutSession.data.checkout)
+          );
+        } catch (error) {
+          const message =
+            error.response && error.response.data.message
+              ? error.response.data.message
+              : error.message;
+          // dispatch({ type: DR_CHECKOUT_EDIT_FAIL, payload: message });
+        }
+      }
+      editDRCheckout();
+      navigate("/placeorder", { replace: true });
+    } else {
+      //
+    }
+  });
 
   const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
   cart.itemsPrice = round2(
@@ -52,12 +96,14 @@ export default function PlaceOrderScreen() {
         "/api/orders",
         {
           orderItems: cart.cartItems,
+          billingAddress: cart.billingAddress,
           shippingAddress: cart.shippingAddress,
           paymentMethod: cart.paymentMethod,
           itemsPrice: cart.itemsPrice,
           shippingPrice: cart.shippingPrice,
           taxPrice: cart.taxPrice,
           totalPrice: cart.totalPrice,
+          checkoutSessionId: cart.checkoutSession.id,
         },
         {
           headers: {
@@ -75,11 +121,11 @@ export default function PlaceOrderScreen() {
     }
   };
 
-  useEffect(() => {
-    if (!cart.paymentMethod) {
-      navigate("/payment");
-    }
-  }, [cart, navigate]);
+  // useEffect(() => {
+  //   if (!cart.paymentMethod) {
+  //     navigate("/payment");
+  //   }
+  // }, [cart, navigate]);
 
   return (
     <div>

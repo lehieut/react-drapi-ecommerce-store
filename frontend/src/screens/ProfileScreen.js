@@ -1,19 +1,19 @@
-import React, { useContext, useReducer, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import { Store } from '../Store';
-import { toast } from 'react-toastify';
-import { getError } from '../utils';
-import axios from 'axios';
+import React, { useContext, useReducer, useState } from "react";
+import { Helmet } from "react-helmet-async";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import { Store } from "../Store";
+import { toast } from "react-toastify";
+import { getError } from "../utils";
+import axios from "axios";
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'UPDATE_REQUEST':
+    case "UPDATE_REQUEST":
       return { ...state, loadingUpdate: true };
-    case 'UPDATE_SUCCESS':
+    case "UPDATE_SUCCESS":
       return { ...state, loadingUpdate: false };
-    case 'UPDATE_FAIL':
+    case "UPDATE_FAIL":
       return { ...state, loadingUpdate: false };
 
     default:
@@ -26,8 +26,8 @@ export default function ProfileScreen() {
   const { userInfo } = state;
   const [name, setName] = useState(userInfo.name);
   const [email, setEmail] = useState(userInfo.email);
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const [{ loadingUpdate }, dispatch] = useReducer(reducer, {
     loadingUpdate: false,
@@ -35,9 +35,13 @@ export default function ProfileScreen() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
     try {
       const { data } = await axios.put(
-        '/api/users/profile',
+        "/api/users/profile",
         {
           name,
           email,
@@ -48,14 +52,14 @@ export default function ProfileScreen() {
         }
       );
       dispatch({
-        type: 'UPDATE_SUCCESS',
+        type: "UPDATE_SUCCESS",
       });
-      ctxDispatch({ type: 'USER_SIGNIN', payload: data });
-      localStorage.setItem('userInfo', JSON.stringify(data));
-      toast.success('User updated successfully');
+      ctxDispatch({ type: "USER_SIGNIN", payload: data });
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      toast.success("User updated successfully");
     } catch (err) {
       dispatch({
-        type: 'FETCH_FAIL',
+        type: "FETCH_FAIL",
       });
       toast.error(getError(err));
     }

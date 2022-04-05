@@ -21,6 +21,9 @@ const initialState = {
     cartItems: localStorage.getItem("cartItems")
       ? JSON.parse(localStorage.getItem("cartItems"))
       : [],
+    checkoutSession: localStorage.getItem("checkoutSession")
+      ? JSON.parse(localStorage.getItem("checkoutSession"))
+      : {},
   },
 };
 function reducer(state, action) {

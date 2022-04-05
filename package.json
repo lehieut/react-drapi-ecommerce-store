@@ -1,5 +1,5 @@
 {
-  "name": "amazona",
+  "name": "drapimern",
   "version": "1.0.0",
   "description": "# Lessons",
   "main": "index.js",
@@ -10,12 +10,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/basir/mern-amazona.git"
+    "url": "git+https://github.com/Digital-River-PE/drapi-mern-bootstrap.git"
   },
-  "author": "",
+  "author": "Digital River",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/basir/mern-amazona/issues"
+    "url": "https://github.com/Digital-River-PE/drapi-mern-bootstrap/issues"
   },
-  "homepage": "https://github.com/basir/mern-amazona#readme"
+  "homepage": "https://github.com/Digital-River-PE/drapi-mern-bootstrap/blob/main/README.md",
+  "keywords": [
+    "Template/Demo",
+    "Ecommerce",
+    "Integration",
+    "Digital River",
+    "API"
+  ]
 }

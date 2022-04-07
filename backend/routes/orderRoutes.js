@@ -22,6 +22,7 @@ orderRouter.post(
   "/",
   isAuth,
   expressAsyncHandler(async (req, res) => {
+    console.log("place order");
     console.log(req.body);
     const checkoutId = req.body.checkoutSessionId;
     const orderObject = { checkoutId: checkoutId };

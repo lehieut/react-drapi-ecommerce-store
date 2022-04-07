@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
+// import Form from "react-bootstrap/Form";
+// import Button from "react-bootstrap/Button";
 import CheckoutSteps from "../components/CheckoutSteps";
 import { Store } from "../Store";
 
@@ -13,9 +13,9 @@ export default function PaymentMethodScreen() {
     cart: { billingAddress, paymentMethod, checkoutSession },
   } = state;
 
-  const [paymentMethodName, setPaymentMethod] = useState(
-    paymentMethod || "PayPal"
-  );
+  // const [paymentMethodName, setPaymentMethod] = useState(
+  //   paymentMethod || "PayPal"
+  // );
 
   useEffect(() => {
     if (!billingAddress.billingAddress1) {
@@ -81,12 +81,12 @@ export default function PaymentMethodScreen() {
     }
   }, [checkoutSession]);
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-    ctxDispatch({ type: "SAVE_PAYMENT_METHOD", payload: paymentMethodName });
-    localStorage.setItem("paymentMethod", paymentMethodName);
-    navigate("/placeorder");
-  };
+  // const submitHandler = (e) => {
+  //   e.preventDefault();
+  //   ctxDispatch({ type: "SAVE_PAYMENT_METHOD", payload: paymentMethodName });
+  //   localStorage.setItem("paymentMethod", paymentMethodName);
+  //   navigate("/placeorder");
+  // };
   return (
     <div>
       <CheckoutSteps step1 step2 step3></CheckoutSteps>
@@ -96,7 +96,7 @@ export default function PaymentMethodScreen() {
         </Helmet>
         <h1 className="my-3">Payment Method</h1>
         <div className="drop-in" id="drop-in"></div>
-        <Form onSubmit={submitHandler}>
+        {/* <Form onSubmit={submitHandler}>
           <div className="mb-3">
             <Form.Check
               type="radio"
@@ -120,7 +120,7 @@ export default function PaymentMethodScreen() {
           <div className="mb-3">
             <Button type="submit">Continue</Button>
           </div>
-        </Form>
+        </Form> */}
       </div>
     </div>
   );

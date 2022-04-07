@@ -80,13 +80,18 @@ export default function PlaceOrderScreen() {
     }
   });
 
-  const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
-  cart.itemsPrice = round2(
-    cart.cartItems.reduce((a, c) => a + c.quantity * c.price, 0)
-  );
-  cart.shippingPrice = cart.itemsPrice > 100 ? round2(0) : round2(10);
-  cart.taxPrice = round2(0.15 * cart.itemsPrice);
-  cart.totalPrice = cart.itemsPrice + cart.shippingPrice + cart.taxPrice;
+  // const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
+  // cart.itemsPrice = round2(
+  //   cart.cartItems.reduce((a, c) => a + c.quantity * c.price, 0)
+  // );
+  // cart.shippingPrice = cart.itemsPrice > 100 ? round2(0) : round2(10);
+  // cart.taxPrice = round2(0.15 * cart.itemsPrice);
+  // cart.totalPrice = cart.itemsPrice + cart.shippingPrice + cart.taxPrice;
+  console.log(cart);
+  cart.itemsPrice = cart.checkoutSession.subtotal;
+  cart.shippingPrice = cart.checkoutSession.totalShipping;
+  cart.taxPrice = cart.checkoutSession.totalTax;
+  cart.totalPrice = cart.checkoutSession.totalAmount;
 
   const placeOrderHandler = async () => {
     try {
@@ -131,18 +136,33 @@ export default function PlaceOrderScreen() {
     <div>
       <CheckoutSteps step1 step2 step3 step4></CheckoutSteps>
       <Helmet>
-        <title>Preview Order</title>
+        <title>Review Order</title>
       </Helmet>
-      <h1 className="my-3">Preview Order</h1>
+      <h1 className="my-3">Review Order</h1>
       <Row>
         <Col md={8}>
+          <Card className="mb-3">
+            <Card.Body>
+              <Card.Title>Billing</Card.Title>
+              <Card.Text>
+                <strong>Name:</strong> {cart.billingAddress.billingFullName}{" "}
+                <br />
+                <strong>Address: </strong> {cart.billingAddress.billingAddress1}
+                , {cart.billingAddress.billingCity},{" "}
+                {cart.billingAddress.billingPostalCode},{" "}
+                {cart.billingAddress.billingCountry}
+              </Card.Text>
+              <Link to="/billing">Edit</Link>
+            </Card.Body>
+          </Card>
+
           <Card className="mb-3">
             <Card.Body>
               <Card.Title>Shipping</Card.Title>
               <Card.Text>
                 <strong>Name:</strong> {cart.shippingAddress.fullName} <br />
-                <strong>Address: </strong> {cart.shippingAddress.address},
-                {cart.shippingAddress.city}, {cart.shippingAddress.postalCode},
+                <strong>Address: </strong> {cart.shippingAddress.address},{" "}
+                {cart.shippingAddress.city}, {cart.shippingAddress.postalCode},{" "}
                 {cart.shippingAddress.country}
               </Card.Text>
               <Link to="/billing">Edit</Link>
@@ -153,7 +173,10 @@ export default function PlaceOrderScreen() {
             <Card.Body>
               <Card.Title>Payment</Card.Title>
               <Card.Text>
-                <strong>Method:</strong> {cart.paymentMethod}
+                <strong>Method:</strong>{" "}
+                {cart.checkoutSession.payment.sources[0].type === "creditCard"
+                  ? "Credit Card"
+                  : cart.checkoutSession.payment.sources[0].type}
               </Card.Text>
               <Link to="/payment">Edit</Link>
             </Card.Body>
@@ -166,7 +189,7 @@ export default function PlaceOrderScreen() {
                 {cart.cartItems.map((item) => (
                   <ListGroup.Item key={item._id}>
                     <Row className="align-items-center">
-                      <Col md={6}>
+                      <Col md={5}>
                         <img
                           src={item.image}
                           alt={item.name}
@@ -178,11 +201,15 @@ export default function PlaceOrderScreen() {
                         <span>{item.quantity}</span>
                       </Col>
                       <Col md={3}>${item.price}</Col>
+                      <Col md={1}>
+                        <Link to="/cart">
+                          <i class="far fa-edit"></i>
+                        </Link>
+                      </Col>
                     </Row>
                   </ListGroup.Item>
                 ))}
               </ListGroup>
-              <Link to="/cart">Edit</Link>
             </Card.Body>
           </Card>
         </Col>

@@ -26,18 +26,18 @@ export default function PaymentMethodScreen() {
   useEffect(() => {
     console.log(JSON.parse(localStorage.getItem("checkoutSession")));
     let scriptLoaded = document.querySelector(
-      `script[src="${process.env.REACT_APP_DR_DROP_IN_URL}"]`
+      `script[src="https://js.digitalriverws.com/v1/DigitalRiver.js"]`
     );
     if (!scriptLoaded) {
       const script = document.createElement("script");
       script.type = "text/javascript";
-      script.src = `${process.env.REACT_APP_DR_DROP_IN_URL}`;
+      script.src = `https://js.digitalriverws.com/v1/DigitalRiver.js`;
       script.async = true;
       script.onload = () => {
         const scriptBlock = document.createElement("script");
         scriptBlock.innerHTML = `      
       let digitalriverpayments = new DigitalRiver(
-        "${process.env.REACT_APP_DR_PUBLIC_KEY}",
+        "pk_test_2c5d83e7268f4b898f6b972c15f2416a",
         {
           locale: "en_US",
         }

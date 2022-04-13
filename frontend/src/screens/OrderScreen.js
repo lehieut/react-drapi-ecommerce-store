@@ -179,6 +179,14 @@ export default function OrderScreen() {
           headers: { authorization: `Bearer ${userInfo.token}` },
         }
       );
+      const items = order.orderItems.map((item) => ({
+        itemId: item._id,
+        quantity: item.quantity,
+      }));
+      const drFulfillment = {
+        orderId: `${order.drOrderId}`,
+        items: items,
+      };
       dispatch({ type: "DELIVER_SUCCESS", payload: data });
       toast.success("Order is delivered");
     } catch (err) {

@@ -350,3 +350,35 @@ export const placeDROrder = async (options) => {
     });
   return checkout;
 };
+
+// FULFILLMENT
+export const fulfillDROrder = async (options) => {
+  // fulfills order via Digital River API
+  // https://www.digitalriver.com/docs/digital-river-api-reference/#operation/createFulfillments
+  const postOptions = {
+    method: "POST",
+    url: `https://api.digitalriver.com/fulfillments`,
+    headers: {
+      Authorization: `Bearer ${process.env.DR_CONFIDENTIAL_KEY}`,
+    },
+    data: options,
+  };
+  console.log("fulfillDROrder");
+  console.log(options);
+  const checkout = await Axios(postOptions)
+    .then((res) => res.data)
+    .catch((err) => {
+      const message =
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message;
+      if (err.response.status === 404) {
+        throw new Error(`${err.config.url} not found`);
+      }
+      if (err.response.status === 400) {
+        throw new Error(`${message} !`);
+      }
+      throw err;
+    });
+  return checkout;
+};

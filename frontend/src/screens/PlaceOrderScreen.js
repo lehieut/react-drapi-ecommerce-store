@@ -174,9 +174,9 @@ export default function PlaceOrderScreen() {
               <Card.Title>Payment</Card.Title>
               <Card.Text>
                 <strong>Method:</strong>{" "}
-                {cart.checkoutSession.payment.sources[0].type === "creditCard"
+                {cart.paymentMethod === "creditCard"
                   ? "Credit Card"
-                  : cart.checkoutSession.payment.sources[0].type}
+                  : cart.paymentMethod}
               </Card.Text>
               <Link to="/payment">Edit</Link>
             </Card.Body>
@@ -203,7 +203,7 @@ export default function PlaceOrderScreen() {
                       <Col md={3}>${item.price}</Col>
                       <Col md={1}>
                         <Link to="/cart">
-                          <i class="far fa-edit"></i>
+                          <i className="far fa-edit"></i>
                         </Link>
                       </Col>
                     </Row>

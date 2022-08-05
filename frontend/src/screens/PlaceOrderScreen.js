@@ -1,25 +1,25 @@
-import Axios from "axios";
-import React, { useContext, useEffect, useReducer } from "react";
-import { Helmet } from "react-helmet-async";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
-import ListGroup from "react-bootstrap/ListGroup";
-import { toast } from "react-toastify";
-import { getError } from "../utils";
-import { Store } from "../Store";
-import CheckoutSteps from "../components/CheckoutSteps";
-import LoadingBox from "../components/LoadingBox";
+import Axios from 'axios';
+import React, { useContext, useEffect, useReducer } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
+import ListGroup from 'react-bootstrap/ListGroup';
+import { toast } from 'react-toastify';
+import { getError } from '../utils';
+import { Store } from '../Store';
+import CheckoutSteps from '../components/CheckoutSteps';
+import LoadingBox from '../components/LoadingBox';
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case "CREATE_REQUEST":
+    case 'CREATE_REQUEST':
       return { ...state, loading: true };
-    case "CREATE_SUCCESS":
+    case 'CREATE_SUCCESS':
       return { ...state, loading: false };
-    case "CREATE_FAIL":
+    case 'CREATE_FAIL':
       return { ...state, loading: false };
     default:
       return state;
@@ -62,7 +62,7 @@ export default function PlaceOrderScreen() {
           //   payload: drCheckoutSession,
           // });
           localStorage.setItem(
-            "checkoutSession",
+            'checkoutSession',
             JSON.stringify(drCheckoutSession.data.checkout)
           );
         } catch (error) {
@@ -74,7 +74,7 @@ export default function PlaceOrderScreen() {
         }
       }
       editDRCheckout();
-      navigate("/placeorder", { replace: true });
+      navigate('/placeorder', { replace: true });
     } else {
       //
     }
@@ -95,10 +95,10 @@ export default function PlaceOrderScreen() {
 
   const placeOrderHandler = async () => {
     try {
-      dispatch({ type: "CREATE_REQUEST" });
+      dispatch({ type: 'CREATE_REQUEST' });
 
       const { data } = await Axios.post(
-        "/api/orders",
+        '/api/orders',
         {
           orderItems: cart.cartItems,
           billingAddress: cart.billingAddress,
@@ -116,12 +116,13 @@ export default function PlaceOrderScreen() {
           },
         }
       );
-      ctxDispatch({ type: "CART_CLEAR" });
-      dispatch({ type: "CREATE_SUCCESS" });
-      localStorage.removeItem("cartItems");
+      ctxDispatch({ type: 'CART_CLEAR' });
+      dispatch({ type: 'CREATE_SUCCESS' });
+      localStorage.removeItem('cartItems');
+      localStorage.removeItem('checkoutSession');
       navigate(`/order/${data.order._id}`);
     } catch (err) {
-      dispatch({ type: "CREATE_FAIL" });
+      dispatch({ type: 'CREATE_FAIL' });
       toast.error(getError(err));
     }
   };
@@ -145,11 +146,11 @@ export default function PlaceOrderScreen() {
             <Card.Body>
               <Card.Title>Billing</Card.Title>
               <Card.Text>
-                <strong>Name:</strong> {cart.billingAddress.billingFullName}{" "}
+                <strong>Name:</strong> {cart.billingAddress.billingFullName}{' '}
                 <br />
                 <strong>Address: </strong> {cart.billingAddress.billingAddress1}
-                , {cart.billingAddress.billingCity},{" "}
-                {cart.billingAddress.billingPostalCode},{" "}
+                , {cart.billingAddress.billingCity},{' '}
+                {cart.billingAddress.billingPostalCode},{' '}
                 {cart.billingAddress.billingCountry}
               </Card.Text>
               <Link to="/billing">Edit</Link>
@@ -161,8 +162,8 @@ export default function PlaceOrderScreen() {
               <Card.Title>Shipping</Card.Title>
               <Card.Text>
                 <strong>Name:</strong> {cart.shippingAddress.fullName} <br />
-                <strong>Address: </strong> {cart.shippingAddress.address},{" "}
-                {cart.shippingAddress.city}, {cart.shippingAddress.postalCode},{" "}
+                <strong>Address: </strong> {cart.shippingAddress.address},{' '}
+                {cart.shippingAddress.city}, {cart.shippingAddress.postalCode},{' '}
                 {cart.shippingAddress.country}
               </Card.Text>
               <Link to="/billing">Edit</Link>
@@ -173,9 +174,9 @@ export default function PlaceOrderScreen() {
             <Card.Body>
               <Card.Title>Payment</Card.Title>
               <Card.Text>
-                <strong>Method:</strong>{" "}
-                {cart.paymentMethod === "creditCard"
-                  ? "Credit Card"
+                <strong>Method:</strong>{' '}
+                {cart.paymentMethod === 'creditCard'
+                  ? 'Credit Card'
                   : cart.paymentMethod}
               </Card.Text>
               <Link to="/payment">Edit</Link>
@@ -194,7 +195,7 @@ export default function PlaceOrderScreen() {
                           src={item.image}
                           alt={item.name}
                           className="img-fluid rounded img-thumbnail"
-                        ></img>{" "}
+                        ></img>{' '}
                         <Link to={`/product/${item.slug}`}>{item.name}</Link>
                       </Col>
                       <Col md={3}>

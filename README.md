@@ -1,19 +1,16 @@
-# MERN AMAZONA
+# E-Commerce Store - React Node Digital River API Bootstrap
 
 ![amazona](/frontend/public/images/amazona.jpg)
 
-# React Tutorial - Build ECommerce in 6 Hours [2022]
+# MERN Stack E-Commerce Store w/ Digital River API integration
 
-Welcome to my React and Node tutorial to build a fully-functional e-commerce website exactly like amazon. Open your code editor and follow me for the next hours to build an e-commerce website using MERN stack (MongoDB, ExpressJS, React and Node.JS).
-
-Watch it on Youtube:
-[https://www.youtube.com/watch?v=CDtPMR5y0QU](https://www.youtube.com/watch?v=CDtPMR5y0QU)
+This project is meant to be a packaged template/example for any potential clients of Digital River to build an e-commerce store and integrate into the Digital River APIs.
 
 ## Demo Website
 
-- 👉 Heroku : [https://mern-amazona-app.herokuapp.com](https://mern-amazona-app.herokuapp.com)
+- 👉 Heroku : [https://drmern.herokuapp.com/](https://drmern.herokuapp.com/)
 
-## You Will Learn
+<!--## You Will Learn
 
 - HTML5 and CSS3: Semantic Elements, CSS Grid, Flexbox
 - React: Components, Props, Events, Hooks, Router, Axios
@@ -71,3 +68,4 @@ $ npm start
 
 - Run http://localhost:3000/signin
 - Enter admin email and password and click signin
+-->
